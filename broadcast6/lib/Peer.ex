@@ -7,7 +7,7 @@ defmodule Peer do
     c = spawn(Com, :start, [index])
     lpl = spawn(Lpl, :start, [c, @pl_reliability])
 
-    send server, {:plMsg, lpl, c, index}
+    send server, { :plMsg, lpl, c, index }
 
   end
 

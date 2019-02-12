@@ -10,7 +10,7 @@ end
 def next(processes, pl, c, erb) do
   receive do
 
-  { :your_erb, your_erb} ->
+  { :your_erb, your_erb } ->
     next(processes, pl, c, your_erb)
 
   { :beb_broadcast, from, msg } ->
@@ -19,7 +19,7 @@ def next(processes, pl, c, erb) do
     end
     next(processes, pl, c, erb)
 
-  { :beb_update, from, msg} ->
+  { :beb_update, from, msg } ->
     send erb, { :beb_deliver, from, msg }
     next(processes, pl, c, erb)
 
