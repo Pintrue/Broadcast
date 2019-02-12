@@ -8,16 +8,16 @@ defmodule Eager_reliable_broadcast do
 
   def next(c, beb, delivered) do
     receive do
-      { :rb_broadcast, from, msg } ->
-        send beb, { :beb_broadcast, from, msg }
+      { :erb_broadcast, msg } ->
+        send beb, {:beb_broadcast, msg}
         next(c, beb, delivered)
 
-      { :beb_deliver, from, msg } ->
+      { :beb_deliver, msg } ->
         if msg in delivered do
           next(c, beb, delivered)
         else
-          send c, { :update, from }
-          send beb, { :beb_broadcast, from, msg }
+          send c, msg
+          send beb, { :beb_broadcast, msg }
           next(c, beb, MapSet.put(delivered, msg))
         end
     end

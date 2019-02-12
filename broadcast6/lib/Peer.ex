@@ -1,13 +1,13 @@
 defmodule Peer do
 
-  @pl_reliability 100
+  @pl_reliability 20
 
   def start(index, server) do
 
     c = spawn(Com, :start, [index])
-    lpl = spawn(Lpl, :start, [c, @pl_reliability])
+    pl = spawn(Lpl, :start, [c, @pl_reliability])
 
-    send server, { :plMsg, lpl, c, index }
+    send server, {:plMsg, pl, c, index}
 
   end
 
