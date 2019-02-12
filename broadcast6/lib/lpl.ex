@@ -3,7 +3,6 @@ defmodule Lpl do
   def start(c, reliability) do
     receive do
       { :bind, index, pl_map } ->
-        send c, { :ur_pl, pl_map }
         next(pl_map, index, c, nil, reliability)
     end
   end
@@ -19,18 +18,15 @@ defmodule Lpl do
         send c, msg
         next(pl_map, index, c, beb, reliability)
 
-      { :pl_send, msg } ->
+      { :pl_send, from, msg} ->
         rand = DAC.random(100)
         if rand <= reliability do
-          send c, msg
+          send pl_map[from], { :pl_deliver, msg }
         end
         next(pl_map, index, c, beb, reliability)
 
-      { :pl_deliver, from, msg } ->
-        rand = DAC.random(100)
-        if rand <= reliability do
-          send beb, { :beb_update, from, msg }
-        end
+      { :pl_deliver, msg } ->
+        send beb, { :beb_update, msg }
         next(pl_map, index, c, beb, reliability)
     end
 
