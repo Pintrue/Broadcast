@@ -9,7 +9,7 @@ defmodule Eager_reliable_broadcast do
   def next(c, beb, delivered) do
     receive do
       { :rb_broadcast, from, msg } ->
-        send beb, {:beb_broadcast, from, msg}
+        send beb, { :beb_broadcast, from, msg }
         next(c, beb, delivered)
 
       { :beb_deliver, from, msg } ->

@@ -18,7 +18,7 @@ def main do
   end
 
   for {_, pl} <- pls do
-    send pl, { :pl_send, { :broadcast, 10000000, 3000 } }
+    send pl, { :pl_send, { :broadcast, 10000000, 6000 } }
   end
 
 end
