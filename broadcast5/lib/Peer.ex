@@ -1,6 +1,6 @@
 defmodule Peer do
 
-  @pl_reliability 20
+  @pl_reliability 100
 
   def start(index, server) do
 

@@ -43,6 +43,7 @@ defmodule Com do
 
         :terminate ->
           IO.puts "Peer #{index} terminate"
+          IO.puts "Peer #{index}: #{inspect(counts)}"
           Process.exit(self(), :kill)
     end
   end
