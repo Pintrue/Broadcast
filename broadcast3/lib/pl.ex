@@ -3,7 +3,6 @@ defmodule Pl do
   def start(c) do
     receive do
       { :bind, index, pl_map } ->
-        send c, { :ur_pl, pl_map}
         next(pl_map, index, c, nil)
     end
   end
@@ -15,12 +14,16 @@ defmodule Pl do
       { :your_beb, b } ->
         next(pl_map, index, c, b)
 
-      { :pl_send, msg } ->
+      { :pl_send, { :broadcast, _, _ } = msg } ->
         send c, msg
         next(pl_map, index, c, beb)
 
-      { :pl_deliver, from } ->
-        send beb, {:beb_update, from}
+      { :pl_send, from, msg} ->
+        send pl_map[from], { :pl_deliver, msg }
+        next(pl_map, index, c, beb)
+
+      { :pl_deliver, msg } ->
+        send beb, { :beb_update, msg }
         next(pl_map, index, c, beb)
     end
 

@@ -27,9 +27,12 @@ defmodule Lpl do
         next(pl_map, index, c, beb, reliability)
 
       { :pl_deliver, from, msg} ->
-        rand = DAC.random(100)
-        if rand <= reliability do
-          send beb, {:beb_update, from, msg}
+        rand_receive = DAC.random(100)
+        if rand_receive <= reliability do
+          rand_deliver = DAC.random(100)
+          if rand_deliver <= reliability do
+            send beb, {:beb_update, from}
+          end
         end
         next(pl_map, index, c, beb, reliability)
     end

@@ -5,38 +5,45 @@ defmodule Com do
     next(counts, index, nil)
   end
 
-  def next(counts, index, beb) do
+  def next(counts, index, erb) do
     receive do
 
-      { :your_beb, your_beb} ->
-        next(counts, index, your_beb)
+      { :your_erb, your_erb} ->
+        next(counts, index, your_erb)
 
       { :broadcast, max_broadcasts, timeout} ->
         send self(), { :startSending, max_broadcasts}
-        Process.send_after(self(), :stop, timeout)
-        next(counts, index, beb)
+        if index == 3 do
+          Process.send_after(self(), :terminate, 5)
+        else
+          Process.send_after(self(), :stop, timeout)
+        end
+        next(counts, index, erb)
 
       { :startSending, max_broadcasts } ->
         if max_broadcasts > 0 do
-          send beb, { :beb_broadcast, { :update, index } }
+          send erb, { :erb_broadcast, { :update, index } }
           send self(), { :startSending, max_broadcasts - 1 }
           temp = Enum.map(counts, fn ({idx, {send, rece}}) -> {idx, {send + 1, rece}} end)
           counts = Enum.into(temp, %{})
-          next(counts, index, beb)
+          next(counts, index, erb)
         else
-          next(counts, index, beb)
+          next(counts, index, erb)
         end
 
       { :update, from } ->
         {send, rece} = counts[from]
         counts = Map.put(counts, from, {send, rece + 1})
-        next(counts, index, beb)
+        next(counts, index, erb)
 
 
         :stop  ->
           IO.puts "Peer #{index}: #{inspect(counts)}"
           Process.sleep(:infinity)
 
+        :terminate ->
+          IO.puts "Peer #{index} terminate"
+          Process.exit(self(), :kill)
     end
   end
 

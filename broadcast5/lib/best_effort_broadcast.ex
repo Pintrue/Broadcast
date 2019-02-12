@@ -9,14 +9,14 @@ end
 
 def next(processes, pl, c) do
   receive do
-  { :beb_broadcast, from } ->
+  { :beb_broadcast, msg } ->
     for i <- 0..4 do
-      send processes[i], { :pl_deliver, from }
+      send pl, { :pl_send, i, msg }
     end
     next(processes, pl, c)
 
-  {:beb_update, from} ->
-    send c, { :update, from }
+  {:beb_update, msg } ->
+    send c, msg
     next(processes, pl, c)
 
   end

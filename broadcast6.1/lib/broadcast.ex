@@ -30,10 +30,15 @@ def main do
 
   for i <- 0..4 do
     b = spawn(Best_effort_broadcast, :start, [pl_map])
+    erb = spawn(Eager_reliable_broadcast, :start, [])
+
     {pl, c} = Enum.at(pl_and_c, i)
     send b, {:bind, pl, c}
-    send c, {:your_beb, b}
     send pl, {:your_beb, b}
+
+    send erb, {:bind, c, b}
+    send c, {:your_erb, erb}
+    send b, {:your_erb, erb}
   end
 
   for {_, pl} <- pls do

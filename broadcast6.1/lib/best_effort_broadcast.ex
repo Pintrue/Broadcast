@@ -15,7 +15,7 @@ def next(processes, pl, c) do
     end
     next(processes, pl, c)
 
-  {:beb_update, msg } ->
+  { :beb_deliver, msg } ->
     send c, msg
     next(processes, pl, c)
 
