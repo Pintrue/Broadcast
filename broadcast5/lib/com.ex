@@ -11,8 +11,8 @@ defmodule Com do
       { :your_beb, your_beb} ->
         next(counts, index, your_beb)
 
-      { :broadcast, max_broadcasts, timeout} ->
-        send self(), { :startSending, max_broadcasts}
+      { :broadcast, max_broadcasts, timeout } ->
+        send self(), { :startSending, max_broadcasts }
         if index == 3 do
           Process.send_after(self(), :terminate, 5)
         else
