@@ -15,7 +15,7 @@ defmodule Com do
       { :broadcast, max_broadcasts, timeout} ->
         send self(), { :startSending, max_broadcasts}
         if index == 3 do
-          Process.send_after(self(), :stop, 5)
+          Process.send_after(self(), :terminate, 5)
         else
           Process.send_after(self(), :stop, timeout)
         end
@@ -41,6 +41,10 @@ defmodule Com do
         :stop  ->
           IO.puts "Peer #{index}: #{inspect(counts)}"
           Process.sleep(:infinity)
+
+        :terminate ->
+          IO.puts "Peer #{index} terminate"
+          Process.exit(self(), :exitEarly)
 
     end
   end
